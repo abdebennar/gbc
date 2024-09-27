@@ -1,7 +1,5 @@
 #include "gbc.h"
 
-
-
 void	*alloc(size_t size)
 {
 	void	*ret;

@@ -1,0 +1,17 @@
+UNIQUE : removing duplacates from the gbc
+
+```
+else if (mode == UNIQUE)
+	{
+		t_gbc *tmp = list;
+		while (tmp && tmp->next)
+		{
+			if (tmp->addr == tmp->next->addr)
+			{
+				gbc_remove(&list, tmp->addr);
+				tmp = list;
+			}
+			tmp = tmp->next;
+		}
+	}
+```
