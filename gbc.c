@@ -1,56 +1,73 @@
 #include "gbc.h"
 
-void	gbc_add(t_gbc *list, void *data)
+// TODO removing doubly lincked list from gbc
+
+void	gbc_add(t_gbc **list, void *data)
 {
-		
+		t_gbc *new;
+		new = malloc(sizeof(t_gbc));
+		new->next = NULL;
+		if (!*list)
+			*list = new;
+		else
+		{
+			new->next = *list;
+			*list = new;
+		}
+		new->addr = data;
 }
 
-void	gbc_remove(t_gbc *list, void *data)
+void	gbc_remove(t_gbc **list, void *data)
 {
-	
+	t_gbc *tmp = *list;
+	t_gbc *tofree;
+	if (tmp && tmp->addr != data)
+		while (tmp->next && tmp->next->addr != data)
+			tmp = tmp->next;
+	if (tmp->next && tmp->next->addr == data)
+	{
+		tofree = tmp->next;
+		tmp->next = tmp->next->next;
+		// free (tofree->addr);
+		// free(tofree);
+	}
 }
 
 void	gbc(void	*data, t_mode mode)
 {
-	static	t_gbc* list = NULL;
+	static	t_gbc* list;
+	static	int capacity;
 
 	if (mode == ADD)
 	{
-		auto t_gbc *tmp = list;
-	t_gbc	*cur = NULL;
-	t_gbc	*tofree = NULL;
-	while (tmp && tmp->addr != data)
-		tmp = tmp->next;
-	cur = tmp;
-	if (cur)
-	{
-		tofree = cur;
-		free (cur->addr);
-		tmp = cur->prev;
-		cur->prev = cur->next;
-		cur->next = tmp;
-		free(tofree);
+		gbc_add(&list, data);
+		capacity++;
 	}
-	}
+
 
 	else if (mode == REMOVE)
 	{
-		t_gbc *new;
-		new = malloc(sizeof(t_gbc));
-		new->next = NULL;
-		new->prev = NULL;
-		if (!list)
-			list = new;
-		else
-		{
-			list->prev = new;
-			new->next = list;
-			list = new;
-		}
-		new->addr = data;
+		gbc_remove(&list, data);
+		capacity--;
 	}
-}
 
+	else if (mode == EARSE)
+	{
+		t_gbc *tmp = list;
+		while (tmp && tmp->next)
+		{
+			tmp->addr = NULL;
+			// if (tmp->addr == tmp->next->addr)
+			// {
+			// 	gbc_remove(&list, tmp->addr);
+			// 	tmp = list;
+			// }
+			tmp = tmp->next;
+		}
+	}
+
+
+}
 void	leaks()
 {
 	system("leaks gbc");
@@ -59,39 +76,19 @@ void	leaks()
 int main() 
 {
 	atexit(leaks);
-    // Step 1: Allocate memory for an integer
-    int* intPtr = (int*)alloc(sizeof(int));
-    if (intPtr == NULL) {
-        printf("Memory allocation failed\n");
-        return 1;
-    }
 
-    // Step 2: Assign a value to the allocated memory
-    *intPtr = 42;
-    printf("Value assigned to intPtr: %d\n", *intPtr);
+	char  *mm = alloc(1000);
+	if (!mm)
+		strcpy(mm, "llolll");
 
-    // Step 3: Free the allocated memory
-    delete(intPtr);
-    printf("Memory freed for intPtr\n");
+	mm = NULL;
 
-    // Step 4: Allocate memory for an array of integers
-    int* arrayPtr = (int*)alloc(5 * sizeof(int));
-    if (arrayPtr == NULL) {
-        printf("Memory allocation for array failed\n");
-        return 1;
-    }
-
-    // Step 5: Assign values to the array
-    for (int i = 0; i < 5; i++) {
-        arrayPtr[i] = i * 10;
-        printf("arrayPtr[%d] = %d\n", i, arrayPtr[i]);
-    }
-
-	gbc(NULL, EARSE);
-    // Step 6: Free the allocated memory for the array
-    delete(arrayPtr);
-    printf("Memory freed for arrayPtr\n");
+	// gbc(NULL, EARSE);
+    // delete(intPtr);
+    // delete(arrayPtr);
 
     return 0;
+	
+
 }
 

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <string.h>
 
 typedef	enum e_mode
 {
@@ -14,7 +15,7 @@ typedef struct s_gbc
 {
 	void	*addr;
 	struct s_gbc *next;
-	struct s_gbc *prev;
+	// struct s_gbc *prev;
 } 	t_gbc;
 
 void	*alloc(size_t size);

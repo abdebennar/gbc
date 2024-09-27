@@ -1,5 +1,5 @@
 
-CFLAGS =  -Wextra -Wall -pedantic -g3 -O3  -std=c11
+CFLAGS =  
 
 main :
 	@gcc $(CFLAGS) *.c -o gbc
