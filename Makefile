@@ -1,6 +1,6 @@
 
-CFLAGS = -g3
+CFLAGS = -Wall -Wextra -Werror -pedantic 
 
 main :
-	@gcc $(CFLAGS) *.c -o gbc
-	@./gbc
+	cc $(CFLAGS) *.c -o gbc
+	@ valgrind ./gbc

@@ -1,4 +1,5 @@
 #include "gbc.h"
+#include <stdlib.h>
 
 void	*alloc(size_t size)
 {
